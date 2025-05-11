@@ -12,7 +12,7 @@ async function fetchBookedDates() {
 
   if (!carId) return;
 
-  const res = await fetch(`https://hook.eu1.make.com/YOUR_WEBHOOK_URL?carId=${carId}`);
+  const res = await fetch(`https://hook.eu1.make.com/https://hook.eu2.make.com/4sk12eobxyaxxiwr2agv4x5on40uybru?carId=${carId}`);
   const data = await res.json();
 
   data.forEach(booking => {
