@@ -1,0 +1,41 @@
+body {
+  font-family: sans-serif;
+  background: #f6f6f6;
+  margin: 0;
+  padding: 2rem;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+#calendar {
+  margin-top: 1rem;
+}
+
+button {
+  margin-top: 2rem;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  background: #2b74e4;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1e5fd2;
+}
+
+.booked {
+  background-color: #ccc !important;
+  pointer-events: none;
+  color: #666;
+}
