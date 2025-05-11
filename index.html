@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supercar Booking Calendar</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+    #calendar {
+      max-width: 300px;
+      margin: auto;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h2>Select Your Booking Dates</h2>
+  <div id="calendar">
+    <input id="dateRange" placeholder="Select a date range" readonly>
+    <button id="confirmBtn" disabled>Confirm Dates</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    const getParam = (key) => new URLSearchParams(window.location.search).get(key);
+    const carId = getParam("carId");
+    const apiUrl = `https://your-n8n-domain.com/webhook/get-booked-dates?carId=${carId}`;
+
+    const disabledDates = [];
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(({ startDate, endDate }) => {
+          const start = new Date(startDate);
+          const end = new Date(endDate);
+          for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+            disabledDates.push(d.toISOString().split("T")[0]);
+          }
+        });
+
+        flatpickr("#dateRange", {
+          mode: "range",
+          dateFormat: "d M Y",
+          disable: disabledDates,
+          onChange: function(selectedDates) {
+            document.getElementById("confirmBtn").disabled = selectedDates.length !== 2;
+          }
+        });
+      });
+
+    document.getElementById("confirmBtn").addEventListener("click", () => {
+      const selected = document.getElementById("dateRange")._flatpickr.selectedDates;
+      if (selected.length === 2) {
+        const format = d => d.toLocaleDateString('en-GB', {
+          day: '2-digit', month: 'short', year: 'numeric'
+        }).replace(/ /g, ' ');
+
+        const payload = {
+          start: format(selected[0]),
+          end: format(selected[1])
+        };
+
+        window.parent.postMessage(payload, "*");
+      }
+    });
+  </script>
+</body>
+</html>
